@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Корзина - Цветочный магазин "Цветущий сад"</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <div class="logo">
+                <h1>Цветущий сад</h1>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="index.html">Главная</a></li>
+                    <li><a href="catalog.html">Каталог</a></li>
+                    <li><a href="contacts.html">Контакты</a></li>
+                </ul>
+            </nav>
+            <div class="cart">
+                <a href="cart.html" class="cart-icon">🛒 <span class="cart-count">0</span></a>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <section class="cart-section">
+            <h2>Корзина</h2>
+            <div class="cart-container">
+                <div class="cart-items">
+                    <!-- Здесь будут отображаться товары -->
+                </div>
+                <div class="cart-summary">
+                    <h3>Итого</h3>
+                    <div class="summary-row">
+                        <span>Товары:</span>
+                        <span class="subtotal">0 ₽</span>
+                    </div>
+                    <div class="summary-row">
+                        <span>Доставка:</span>
+                        <span class="delivery-cost">0 ₽</span>
+                    </div>
+                    <div class="summary-row total">
+                        <span>К оплате:</span>
+                        <span class="total-amount">0 ₽</span>
+                    </div>
+                    <button class="btn checkout-btn" disabled>Оформить заказ</button>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>Контакты</h3>
+                <p>Телефон: +7 (999) 123-45-67</p>
+                <p>Email: info@flower-shop.ru</p>
+                <p>Адрес: ул. Цветочная, 1</p>
+            </div>
+            <div class="footer-section">
+                <h3>Режим работы</h3>
+                <p>Пн-Пт: 9:00 - 20:00</p>
+                <p>Сб-Вс: 10:00 - 19:00</p>
+            </div>
+            <div class="footer-section">
+                <h3>Мы в соцсетях</h3>
+                <div class="social-links">
+                    <a href="#">Instagram</a>
+                    <a href="#">Facebook</a>
+                    <a href="#">VK</a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2025 Цветочный магазин "Цветущий сад". Все права защищены.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Функционал корзины
+        let cart = JSON.parse(localStorage.getItem('cart')) || [];
+        const cartItems = document.querySelector('.cart-items');
+        const subtotalElement = document.querySelector('.subtotal');
+        const deliveryCostElement = document.querySelector('.delivery-cost');
+        const totalAmountElement = document.querySelector('.total-amount');
+        const checkoutBtn = document.querySelector('.checkout-btn');
+
+        function updateCart() {
+            // Обновляем счетчик в шапке
+            const cartCount = document.querySelector('.cart-count');
+            const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+            cartCount.textContent = totalItems;
+
+            // Очищаем контейнер с товарами
+            cartItems.innerHTML = '';
+
+            if (cart.length === 0) {
+                cartItems.innerHTML = '<p class="empty-cart">Ваша корзина пуста</p>';
+                checkoutBtn.disabled = true;
+                return;
+            }
+
+            // Отображаем товары
+            cart.forEach(item => {
+                const itemElement = document.createElement('div');
+                itemElement.className = 'cart-item';
+                itemElement.innerHTML = `
+                    <div class="item-info">
+                        <h4>${item.name}</h4>
+                        <p class="item-price">${item.price} ₽</p>
+                    </div>
+                    <div class="item-quantity">
+                        <button class="quantity-btn minus" data-id="${item.id}">-</button>
+                        <span class="quantity">${item.quantity}</span>
+                        <button class="quantity-btn plus" data-id="${item.id}">+</button>
+                    </div>
+                    <div class="item-total">
+                        ${item.price * item.quantity} ₽
+                    </div>
+                    <button class="remove-btn" data-id="${item.id}">×</button>
+                `;
+                cartItems.appendChild(itemElement);
+            });
+
+            // Обновляем итоги
+            updateTotals();
+            checkoutBtn.disabled = false;
+        }
+
+        function updateTotals() {
+            const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            const deliveryCost = subtotal > 0 ? 300 : 0; // Стоимость доставки 300₽
+            const total = subtotal + deliveryCost;
+
+            subtotalElement.textContent = `${subtotal} ₽`;
+            deliveryCostElement.textContent = `${deliveryCost} ₽`;
+            totalAmountElement.textContent = `${total} ₽`;
+        }
+
+        // Обработчики событий
+        cartItems.addEventListener('click', (e) => {
+            const target = e.target;
+            const id = target.dataset.id;
+
+            if (target.classList.contains('quantity-btn')) {
+                const item = cart.find(item => item.id === id);
+                if (item) {
+                    if (target.classList.contains('plus')) {
+                        item.quantity++;
+                    } else if (target.classList.contains('minus')) {
+                        item.quantity--;
+                        if (item.quantity <= 0) {
+                            cart = cart.filter(item => item.id !== id);
+                        }
+                    }
+                    localStorage.setItem('cart', JSON.stringify(cart));
+                    updateCart();
+                }
+            } else if (target.classList.contains('remove-btn')) {
+                cart = cart.filter(item => item.id !== id);
+                localStorage.setItem('cart', JSON.stringify(cart));
+                updateCart();
+            }
+        });
+
+        checkoutBtn.addEventListener('click', () => {
+            alert('Спасибо за заказ! Мы свяжемся с вами в ближайшее время.');
+            cart = [];
+            localStorage.removeItem('cart');
+            updateCart();
+        });
+
+        // Инициализация корзины
+        updateCart();
+    </script>
+</body>
+</html> 

@@ -1,0 +1,19 @@
+{
+  "name": "flower-shop",
+  "version": "1.0.0",
+  "description": "Современный сайт цветочного магазина",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "keywords": [
+    "flower-shop",
+    "e-commerce",
+    "responsive"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+} 

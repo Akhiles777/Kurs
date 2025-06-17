@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Контакты - Цветочный магазин "Цветущий сад"</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://api-maps.yandex.ru/2.1/?apikey=YOUR_API_KEY&lang=ru_RU" type="text/javascript"></script>
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <div class="logo">
+                <h1>Цветущий сад</h1>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="index.html">Главная</a></li>
+                    <li><a href="catalog.html">Каталог</a></li>
+                    <li><a href="contacts.html">Контакты</a></li>
+                </ul>
+            </nav>
+            <div class="cart">
+                <a href="cart.html" class="cart-icon">🛒 <span class="cart-count">0</span></a>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <section class="contacts">
+            <h2>Наши контакты</h2>
+            <div class="contacts-grid">
+                <div class="contact-info">
+                    <h3>Контактная информация</h3>
+                    <p><strong>Адрес:</strong> ул. Цветочная, 1</p>
+                    <p><strong>Телефон:</strong> +7 (999) 123-45-67</p>
+                    <p><strong>Email:</strong> info@flower-shop.ru</p>
+                    <h3>Режим работы</h3>
+                    <p>Пн-Пт: 9:00 - 20:00</p>
+                    <p>Сб-Вс: 10:00 - 19:00</p>
+                </div>
+                <div class="map-container">
+                    <div id="map" style="width: 100%; height: 400px;"></div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>Контакты</h3>
+                <p>Телефон: +7 (999) 123-45-67</p>
+                <p>Email: info@flower-shop.ru</p>
+                <p>Адрес: ул. Цветочная, 1</p>
+            </div>
+            <div class="footer-section">
+                <h3>Режим работы</h3>
+                <p>Пн-Пт: 9:00 - 20:00</p>
+                <p>Сб-Вс: 10:00 - 19:00</p>
+            </div>
+            <div class="footer-section">
+                <h3>Мы в соцсетях</h3>
+                <div class="social-links">
+                    <a href="#">Instagram</a>
+                    <a href="#">Facebook</a>
+                    <a href="#">VK</a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2025 Цветочный магазин "Цветущий сад". Все права защищены.</p>
+        </div>
+    </footer>
+
+    <script>
+        ymaps.ready(function () {
+            var myMap = new ymaps.Map('map', {
+                center: [55.76, 37.64], // Координаты центра карты
+                zoom: 15
+            });
+
+            var myPlacemark = new ymaps.Placemark([55.76, 37.64], {
+                hintContent: 'Цветочный магазин "Цветущий сад"',
+                balloonContent: 'ул. Цветочная, 1'
+            });
+
+            myMap.geoObjects.add(myPlacemark);
+        });
+    </script>
+</body>
+</html> 
